@@ -19,10 +19,10 @@ h1{font-size:18px;margin:0 0 7px}
 .tab.active{background:#111827;color:#fff;border-color:#111827}
 .store{background:#fff;border:1px solid #e5e7eb;border-radius:12px;margin:8px 0;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.04)}
 .store-head{padding:10px 11px;cursor:pointer;display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
-.store-title{font-size:16px;font-weight:800;margin-bottom:2px}
+.store-title-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:2px}.store-title{font-size:16px;font-weight:800}
 .addr{font-size:10px;color:#6b7280;line-height:1.35}
 .badge{font-size:10px;padding:4px 6px;border-radius:999px;white-space:nowrap;background:#ecfdf5;color:#047857}
-.badge.empty{background:#fff7ed;color:#c2410c}.store-tools{display:flex;gap:5px;margin-top:5px}.store-link{font-size:10px;text-decoration:none;color:#4b5563;background:#f3f4f6;border:1px solid #e5e7eb;padding:3px 6px;border-radius:999px}.store-link:hover{background:#e5e7eb}
+.badge.empty{background:#fff7ed;color:#c2410c}.store-tools{display:flex;gap:4px;flex:0 0 auto}.store-link{font-size:9px;line-height:1;text-decoration:none;color:#4b5563;background:#f3f4f6;border:1px solid #e5e7eb;padding:4px 6px;border-radius:999px;font-weight:700}.store-link:hover{background:#e5e7eb}
 .items{display:none;border-top:1px solid #eee;padding:0 10px 3px}
 .store.open .items{display:block}
 .item{display:grid;grid-template-columns:42px minmax(0,1fr) auto;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid #f0f0f0;transition:.18s ease}
@@ -122,12 +122,14 @@ function render() {
     card.innerHTML = `
       <div class="store-head">
         <div>
-          <div class="store-title">${s.name}</div>
+          <div class="store-title-row">
+            <div class="store-title">${s.name}</div>
+            ${(s.facebook || s.line_id) ? `<div class="store-tools">
+              ${s.line_id ? `<a class="store-link" href="https://line.me/R/ti/p/${s.line_id}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">LINE</a>` : ""}
+              ${s.facebook ? `<a class="store-link" href="${s.facebook}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">FB</a>` : ""}
+            </div>` : ""}
+          </div>
           <div class="addr">${s.address}</div>
-          ${(s.facebook || s.line_id) ? `<div class="store-tools">
-            ${s.line_id ? `<a class="store-link" href="https://line.me/R/ti/p/${s.line_id}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">LINE</a>` : ""}
-            ${s.facebook ? `<a class="store-link" href="${s.facebook}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">FB</a>` : ""}
-          </div>` : ""}
         </div>
         <div class="badge ${isEmpty ? "empty" : ""}">
           ${isEmpty ? "尚未更新" : s.items.length + " 個抽選"}
