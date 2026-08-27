@@ -155,7 +155,7 @@ function render() {
             <div class="name">${name}</div>
           </div>
           <div class="actions">
-            <a class="go" href="${url}" target="_blank" rel="noopener noreferrer">${checked ? "再次開啟" : "前往抽選"}</a>
+            <a class="go" href="${url}" rel="noopener noreferrer">${checked ? "再次開啟" : "前往抽選"}</a>
           </div>
         `;
         row.querySelector(".go").addEventListener("click", () => {
