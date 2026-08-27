@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FUNBOX 戰鬥陀螺抽選入口</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      background: #f5f6f8;
+      color: #222;
+    }
+
+    .header {
+      background: #111827;
+      color: white;
+      padding: 28px 20px;
+      text-align: center;
+    }
+
+    .header h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+    }
+
+    .header p {
+      margin: 0;
+      opacity: 0.8;
+      font-size: 14px;
+    }
+
+    .container {
+      width: min(1100px, calc(100% - 32px));
+      margin: 28px auto;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .search {
+      flex: 1;
+      min-width: 220px;
+      padding: 12px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      font-size: 16px;
+      background: white;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 14px;
+      padding: 18px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+      border: 1px solid #eceff3;
+    }
+
+    .code {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: bold;
+      background: #eef2ff;
+      color: #3730a3;
+      padding: 5px 9px;
+      border-radius: 999px;
+      margin-bottom: 10px;
+    }
+
+    .name {
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.45;
+      min-height: 52px;
+    }
+
+    .actions {
+      margin-top: 16px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .btn {
+      flex: 1;
+      display: block;
+      text-align: center;
+      text-decoration: none;
+      background: #06c755;
+      color: white;
+      padding: 11px 12px;
+      border-radius: 9px;
+      font-weight: bold;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+    }
+
+    .done-label {
+      font-size: 14px;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .footer {
+      text-align: center;
+      color: #777;
+      font-size: 13px;
+      padding: 32px 16px;
+    }
+
+    @media (max-width: 600px) {
+      .header h1 {
+        font-size: 23px;
+      }
+
+      .container {
+        width: min(100% - 20px, 1100px);
+        margin-top: 18px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .name {
+        min-height: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="header">
+    <h1>🎯 FUNBOX 戰鬥陀螺抽選入口</h1>
+    <p>共 18 個抽選連結</p>
+  </div>
+
+  <div class="container">
+
+    <div class="toolbar">
+      <input
+        id="search"
+        class="search"
+        type="text"
+        placeholder="搜尋 BX、UX、CX 或商品名稱..."
+      >
+    </div>
+
+    <div id="productGrid" class="grid"></div>
+
+  </div>
+
+  <div class="footer">
+    點擊「前往抽選」即可開啟對應 LINE 連結
+  </div>
+
+<script>
+const products = [
+  {
+    code: "BX-32",
+    name: "寬型極限衝擊戰鬥盤",
+    url: "https://lin.ee/oQftDUW"
+  },
+  {
+    code: "BX-50",
+    name: "天堂日輪 隨機強化",
+    url: "https://lin.ee/z7Td3Gr"
+  },
+  {
+    code: "UX-20",
+    name: "榮耀武神LF",
+    url: "https://lin.ee/8WUY2KX"
+  },
+  {
+    code: "BX-00",
+    name: "暴風天馬3-70RA",
+    url: "https://lin.ee/7OSuRof"
+  },
+  {
+    code: "BX-51",
+    name: "旋風發射器 黑綠",
+    url: "https://lin.ee/rwPDcO1"
+  },
+  {
+    code: "BXG-01",
+    name: "烈焰飛鳳S",
+    url: "https://lin.ee/8UeJWKh"
+  },
+  {
+    code: "BX-18",
+    name: "X旋風發射器",
+    url: "https://lin.ee/OPYEc578"
+  },
+  {
+    code: "BX-26",
+    name: "獨角刺心",
+    url: "https://lin.ee/WBMWFcS"
+  },
+  {
+    code: "BX-33",
+    name: "皓戰猛虎",
+    url: "https://lin.ee/RxHvaPM"
+  },
+  {
+    code: "BX-35",
+    name: "隨機強化組 Vol.04",
+    url: "https://lin.ee/NzS2cxEK"
+  },
+  {
+    code: "BXG-04",
+    name: "銀牙烈虎S",
+    url: "https://lin.ee/tvERf3U"
+  },
+  {
+    code: "UX-19",
+    name: "子彈獅鷲H",
+    url: "https://lin.ee/vjuf0wr"
+  },
+  {
+    code: "UX-11",
+    name: "衝擊龍神 豪華組",
+    url: "https://lin.ee/NYvqvZ2"
+  },
+  {
+    code: "BX-40",
+    name: "發射器（酒紅）",
+    url: "https://lin.ee/ZAbzxDV"
+  },
+  {
+    code: "CX-18",
+    name: "腕龍鞭打 隨機強化組",
+    url: "https://lin.ee/SE0DFSI"
+  },
+  {
+    code: "UX-02",
+    name: "惡魔戰錘",
+    url: "https://lin.ee/87xUH1V"
+  },
+  {
+    code: "BX-25",
+    name: "戰鬥陀螺X專業收納包",
+    url: "https://lin.ee/8fEeQs2"
+  },
+  {
+    code: "BX-57",
+    name: "3V3對戰收納盒 黑",
+    url: "https://lin.ee/NWIqavM"
+  }
+];
+
+const grid = document.getElementById("productGrid");
+const search = document.getElementById("search");
+
+function getDoneKey(code) {
+  return "funbox_done_" + code;
+}
+
+function renderProducts(keyword = "") {
+  const text = keyword.trim().toLowerCase();
+
+  const filtered = products.filter(product =>
+    product.code.toLowerCase().includes(text) ||
+    product.name.toLowerCase().includes(text)
+  );
+
+  grid.innerHTML = "";
+
+  filtered.forEach(product => {
+    const card = document.createElement("div");
+    card.className = "card";
+
+    const checked =
+      localStorage.getItem(getDoneKey(product.code)) === "true";
+
+    card.innerHTML = `
+      <div class="code">${product.code}</div>
+
+      <div class="name">
+        ${product.name}
+      </div>
+
+      <div class="actions">
+
+        <a
+          class="btn"
+          href="${product.url}"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          前往抽選
+        </a>
+
+        <label class="done-label">
+          <input
+            type="checkbox"
+            ${checked ? "checked" : ""}
+            data-code="${product.code}"
+          >
+          已抽
+        </label>
+
+      </div>
+    `;
+
+    grid.appendChild(card);
+  });
+
+  document.querySelectorAll(
+    'input[type="checkbox"][data-code]'
+  ).forEach(box => {
+
+    box.addEventListener("change", function() {
+
+      localStorage.setItem(
+        getDoneKey(this.dataset.code),
+        this.checked
+      );
+
+    });
+
+  });
+}
+
+search.addEventListener("input", function() {
+  renderProducts(this.value);
+});
+
+renderProducts();
+</script>
+
+</body>
+</html>
