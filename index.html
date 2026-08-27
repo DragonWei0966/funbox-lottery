@@ -1,350 +1,190 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FUNBOX 戰鬥陀螺抽選入口</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
-      background: #f5f6f8;
-      color: #222;
-    }
-
-    .header {
-      background: #111827;
-      color: white;
-      padding: 28px 20px;
-      text-align: center;
-    }
-
-    .header h1 {
-      margin: 0 0 8px;
-      font-size: 28px;
-    }
-
-    .header p {
-      margin: 0;
-      opacity: 0.8;
-      font-size: 14px;
-    }
-
-    .container {
-      width: min(1100px, calc(100% - 32px));
-      margin: 28px auto;
-    }
-
-    .toolbar {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-    }
-
-    .search {
-      flex: 1;
-      min-width: 220px;
-      padding: 12px 14px;
-      border: 1px solid #d1d5db;
-      border-radius: 10px;
-      font-size: 16px;
-      background: white;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 16px;
-    }
-
-    .card {
-      background: white;
-      border-radius: 14px;
-      padding: 18px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-      border: 1px solid #eceff3;
-    }
-
-    .code {
-      display: inline-block;
-      font-size: 13px;
-      font-weight: bold;
-      background: #eef2ff;
-      color: #3730a3;
-      padding: 5px 9px;
-      border-radius: 999px;
-      margin-bottom: 10px;
-    }
-
-    .name {
-      font-size: 18px;
-      font-weight: 700;
-      line-height: 1.45;
-      min-height: 52px;
-    }
-
-    .actions {
-      margin-top: 16px;
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-
-    .btn {
-      flex: 1;
-      display: block;
-      text-align: center;
-      text-decoration: none;
-      background: #06c755;
-      color: white;
-      padding: 11px 12px;
-      border-radius: 9px;
-      font-weight: bold;
-    }
-
-    .btn:hover {
-      opacity: 0.9;
-    }
-
-    .done-label {
-      font-size: 14px;
-      white-space: nowrap;
-      cursor: pointer;
-    }
-
-    .footer {
-      text-align: center;
-      color: #777;
-      font-size: 13px;
-      padding: 32px 16px;
-    }
-
-    @media (max-width: 600px) {
-      .header h1 {
-        font-size: 23px;
-      }
-
-      .container {
-        width: min(100% - 20px, 1100px);
-        margin-top: 18px;
-      }
-
-      .grid {
-        grid-template-columns: 1fr;
-      }
-
-      .name {
-        min-height: auto;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#111827">
+<title>戰鬥陀螺 X 抽選入口</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif;background:#f4f6f8;color:#1f2937}
+header{background:#111827;color:#fff;padding:22px 16px 18px;position:sticky;top:0;z-index:20;box-shadow:0 2px 10px rgba(0,0,0,.15)}
+.header-inner{max-width:1100px;margin:auto}
+h1{font-size:22px;margin:0 0 12px}
+.search{width:100%;padding:13px 14px;border:0;border-radius:12px;font-size:16px;outline:none}
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;font-size:13px}
+.pill{background:rgba(255,255,255,.12);padding:5px 9px;border-radius:999px}
+.container{max-width:1100px;margin:18px auto;padding:0 12px 40px}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:10px;position:sticky;top:128px;background:#f4f6f8;z-index:10}
+.tab{border:1px solid #d1d5db;background:#fff;padding:9px 14px;border-radius:999px;white-space:nowrap;font-weight:700;cursor:pointer}
+.tab.active{background:#111827;color:#fff;border-color:#111827}
+.store{background:#fff;border:1px solid #e5e7eb;border-radius:16px;margin:12px 0;overflow:hidden;box-shadow:0 3px 12px rgba(0,0,0,.04)}
+.store-head{padding:15px;cursor:pointer;display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.store-title{font-size:17px;font-weight:800;margin-bottom:4px}
+.addr{font-size:12px;color:#6b7280;line-height:1.4}
+.badge{font-size:12px;padding:5px 8px;border-radius:999px;white-space:nowrap;background:#ecfdf5;color:#047857}
+.badge.empty{background:#fff7ed;color:#c2410c}
+.items{display:none;border-top:1px solid #eee;padding:8px 12px 12px}
+.store.open .items{display:block}
+.item{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:12px 2px;border-bottom:1px solid #f0f0f0}
+.item:last-child{border-bottom:0}
+.code{font-size:12px;font-weight:800;color:#3730a3;background:#eef2ff;padding:3px 7px;border-radius:999px;display:inline-block;margin-bottom:4px}
+.name{font-size:15px;font-weight:700;line-height:1.35}
+.actions{display:flex;gap:7px;align-items:center}
+.go{text-decoration:none;background:#06c755;color:#fff;font-weight:800;padding:10px 12px;border-radius:10px;font-size:14px;white-space:nowrap}
+.done{display:flex;align-items:center;gap:5px;font-size:12px;white-space:nowrap}
+.item.done-item{opacity:.48}
+.emptybox{padding:18px 2px;color:#9a3412;font-size:14px}
+.no-results{text-align:center;color:#6b7280;padding:35px 10px;display:none}
+@media(max-width:600px){
+  header{padding-top:16px}
+  h1{font-size:20px}
+  .tabs{top:119px}
+  .store-head{padding:14px 13px}
+  .item{grid-template-columns:1fr}
+  .actions{justify-content:space-between}
+  .go{flex:1;text-align:center;padding:12px}
+}
+</style>
 </head>
-
 <body>
-
-  <div class="header">
-    <h1>🎯 FUNBOX 戰鬥陀螺抽選入口</h1>
-    <p>共 18 個抽選連結</p>
-  </div>
-
-  <div class="container">
-
-    <div class="toolbar">
-      <input
-        id="search"
-        class="search"
-        type="text"
-        placeholder="搜尋 BX、UX、CX 或商品名稱..."
-      >
+<header>
+  <div class="header-inner">
+    <h1>🎯 戰鬥陀螺 X 抽選入口</h1>
+    <input id="search" class="search" placeholder="搜尋店家、BX-50、商品名稱…" autocomplete="off">
+    <div class="stats">
+      <span class="pill" id="storeStat"></span>
+      <span class="pill" id="itemStat"></span>
+      <span class="pill" id="doneStat"></span>
     </div>
-
-    <div id="productGrid" class="grid"></div>
-
   </div>
+</header>
 
-  <div class="footer">
-    點擊「前往抽選」即可開啟對應 LINE 連結
+<div class="container">
+  <div class="tabs">
+    <button class="tab active" data-region="全部">全部</button>
+    <button class="tab" data-region="台北市">台北市</button>
+    <button class="tab" data-region="新北市">新北市</button>
+    <button class="tab" data-region="未更新">尚未更新</button>
   </div>
+  <div id="stores"></div>
+  <div id="noResults" class="no-results">找不到符合的店家或商品</div>
+</div>
 
 <script>
-const products = [
-  {
-    code: "BX-32",
-    name: "寬型極限衝擊戰鬥盤",
-    url: "https://lin.ee/oQftDUW"
-  },
-  {
-    code: "BX-50",
-    name: "天堂日輪 隨機強化",
-    url: "https://lin.ee/z7Td3Gr"
-  },
-  {
-    code: "UX-20",
-    name: "榮耀武神LF",
-    url: "https://lin.ee/8WUY2KX"
-  },
-  {
-    code: "BX-00",
-    name: "暴風天馬3-70RA",
-    url: "https://lin.ee/7OSuRof"
-  },
-  {
-    code: "BX-51",
-    name: "旋風發射器 黑綠",
-    url: "https://lin.ee/rwPDcO1"
-  },
-  {
-    code: "BXG-01",
-    name: "烈焰飛鳳S",
-    url: "https://lin.ee/8UeJWKh"
-  },
-  {
-    code: "BX-18",
-    name: "X旋風發射器",
-    url: "https://lin.ee/OPYEc578"
-  },
-  {
-    code: "BX-26",
-    name: "獨角刺心",
-    url: "https://lin.ee/WBMWFcS"
-  },
-  {
-    code: "BX-33",
-    name: "皓戰猛虎",
-    url: "https://lin.ee/RxHvaPM"
-  },
-  {
-    code: "BX-35",
-    name: "隨機強化組 Vol.04",
-    url: "https://lin.ee/NzS2cxEK"
-  },
-  {
-    code: "BXG-04",
-    name: "銀牙烈虎S",
-    url: "https://lin.ee/tvERf3U"
-  },
-  {
-    code: "UX-19",
-    name: "子彈獅鷲H",
-    url: "https://lin.ee/vjuf0wr"
-  },
-  {
-    code: "UX-11",
-    name: "衝擊龍神 豪華組",
-    url: "https://lin.ee/NYvqvZ2"
-  },
-  {
-    code: "BX-40",
-    name: "發射器（酒紅）",
-    url: "https://lin.ee/ZAbzxDV"
-  },
-  {
-    code: "CX-18",
-    name: "腕龍鞭打 隨機強化組",
-    url: "https://lin.ee/SE0DFSI"
-  },
-  {
-    code: "UX-02",
-    name: "惡魔戰錘",
-    url: "https://lin.ee/87xUH1V"
-  },
-  {
-    code: "BX-25",
-    name: "戰鬥陀螺X專業收納包",
-    url: "https://lin.ee/8fEeQs2"
-  },
-  {
-    code: "BX-57",
-    name: "3V3對戰收納盒 黑",
-    url: "https://lin.ee/NWIqavM"
-  }
-];
-
-const grid = document.getElementById("productGrid");
+const stores = [{"region": "台北市", "name": "Fun box 忠孝SOGO", "address": "10691臺北市大安區光武里忠孝東路四段45號10F", "items": [["BX-57", "3V3對戰收納盒 黑", "https://lin.ee/xe0367ja"], ["BX-25", "戰鬥陀螺X專業收納包", "https://lin.ee/xxqkyvC"], ["BX-45", "武士魂斬", "https://lin.ee/TmhBnu9"], ["BX-10", "極限衝擊戰鬥盤", "https://lin.ee/9xvdY8S"], ["BX-37", "雙重極限衝擊戰鬥盤 豪華組", "https://lin.ee/yP3r8Lq"], ["UX-19", "子彈獅鷲H", "https://lin.ee/tratm8F"], ["BX-51", "旋風發射器 黑綠", "https://lin.ee/zrGLkVA"], ["BX-40", "發射器（酒紅）", "https://lin.ee/QrlSYOm"], ["UX-02", "惡魔戰錘", "https://lin.ee/suYW8By"], ["CX-18", "腕龍鞭打 隨機強化組", "https://lin.ee/XoUgnBE"]]}, {"region": "台北市", "name": "Funbox 大葉高島屋", "address": "111臺北市士林區三玉里忠誠路二段55號3F", "items": [["BX-32", "寬型極限衝擊戰鬥盤", "https://lin.ee/oQftDUW"], ["BX-50", "天堂日輪 隨機強化", "https://lin.ee/z7Td3Gr"], ["UX-20", "榮耀武神LF", "https://lin.ee/8WUY2KX"], ["BX-00", "暴風天馬3-70RA", "https://lin.ee/7OSuRof"], ["BX-51", "旋風發射器 黑綠", "https://lin.ee/rwPDcO1"], ["BXG-01", "烈焰飛鳳S", "https://lin.ee/8UeJWKh"], ["BX-18", "X旋風發射器", "https://lin.ee/OPYEc578"], ["BX-26", "獨角刺心", "https://lin.ee/WBMWFcS"], ["BX-33", "皓戰猛虎", "https://lin.ee/RxHvaPM"], ["BX-35", "隨機強化組 Vol.04", "https://lin.ee/NzS2cxEK"], ["BXG-04", "銀牙烈虎S", "https://lin.ee/tvERf3U"], ["UX-19", "子彈獅鷲H", "https://lin.ee/vjuf0wr"], ["UX-11", "衝擊龍神 豪華組", "https://lin.ee/NYvqvZ2"], ["BX-40", "發射器（酒紅）", "https://lin.ee/ZAbzxDV"], ["CX-18", "腕龍鞭打 隨機強化組", "https://lin.ee/SE0DFSI"], ["UX-02", "惡魔戰錘", "https://lin.ee/87xUH1V"], ["BX-25", "戰鬥陀螺X專業收納包", "https://lin.ee/8fEeQs2"], ["BX-57", "3V3對戰收納盒 黑", "https://lin.ee/NWIqavM"]]}, {"region": "台北市", "name": "Funbox 三越站前店", "address": "100臺北市中正區黎明里忠孝西路一段66號8F", "items": [["CX-18", "腕龍鞭打 隨機強化組", "https://lin.ee/7OSjTU8"], ["UX-02", "惡魔戰錘", "https://lin.ee/rtVvgHz"], ["UX-19", "子彈獅鷲", "https://lin.ee/QRCmcpm"], ["UX-11", "衝擊龍神 豪華組", "https://lin.ee/W33Gmx7"], ["BX-40", "發射器（酒紅）", "https://lin.ee/xbV89AE"], ["BX-51", "旋風發射器 黑綠", "https://lin.ee/s5Lfj6E"]]}, {"region": "台北市", "name": "Funbox 天母SOGO店", "address": "111臺北市士林區德行里中山北路六段77號7F", "items": []}, {"region": "台北市", "name": "Funbox 遠百信義A13", "address": "110臺北市信義區西村里松仁路58號5樓", "items": []}, {"region": "台北市", "name": "Funbox 信義A8店", "address": "110臺北市信義區西村里松高路12號5樓", "items": []}, {"region": "台北市", "name": "Funbox 南港潤泰", "address": "115臺北市南港區忠孝東路七段369號A棟3樓", "items": [["BX-18", "X旋風發射器", "https://lin.ee/NX0u6zt"], ["BX-26", "獨角刺心", "https://lin.ee/Wdlwq4x"], ["BX-33", "皓戰猛虎", "https://lin.ee/YaNp2ax"], ["BX-35", "隨機強化組 Vol.04", "https://lin.ee/x2sZbiB"], ["BX-40", "發射器（酒紅／左迴旋）", "https://lin.ee/qiUdBhv"], ["BX-50", "天堂日輪 隨機強化組", "https://lin.ee/yXW2ZaV"], ["BX-51", "旋風發射器 黑綠", "https://lin.ee/T0Bn5jo"], ["CX-18", "腕龍鞭打 隨機強化組", "https://lin.ee/Noblk6Sa"], ["UX-11", "衝擊龍神 豪華組", "https://lin.ee/Pwc4Tl2"], ["UX-20", "榮耀武神LF", "https://lin.ee/xHpCF14"], ["UX-19", "子彈獅鷲H", "https://lin.ee/qxwwrT2"], ["BX-00", "暴風天馬3-70RA", "https://lin.ee/zCmUo3W"], ["BXG-01", "烈焰飛鳳S", "https://lin.ee/7GvvFzA"], ["BXG-04", "銀牙烈虎S", "https://lin.ee/ZVKVm1g"], ["BX-32", "寬型極限衝擊戰鬥盤", "https://lin.ee/6Jb8Xeq"], ["UX-02", "惡魔戰鎚", "https://lin.ee/opnUKNC"], ["BX-57", "3V3對戰收納盒 黑", "https://lin.ee/7a1iQAm"], ["BX-25", "戰鬥陀螺X專業收納包", "https://lin.ee/TUn3Y7o"], ["BX-10", "極限衝擊戰鬥盤", "https://lin.ee/orJ6uyC"]]}, {"region": "台北市", "name": "Funbox 天母三越店", "address": "111臺北市士林區天福里天母東路68號6樓", "items": []}, {"region": "台北市", "name": "Funbox 美麗華", "address": "10491臺北市中山區金泰里敬業三路20號4樓", "items": []}, {"region": "台北市", "name": "Funbox LaLaport南港", "address": "115臺北市南港區環河里經貿二路131號4樓", "items": []}, {"region": "台北市", "name": "Funbox 三越南西店", "address": "104臺北市中山區民安里南京西路12號6樓", "items": []}, {"region": "台北市", "name": "來玩聚－北車地下街", "address": "103臺北市大同區鄭州路B1", "items": [["BX-40", "發射器（酒紅／左迴）", "https://lin.ee/zTfTvpD"], ["BX-51", "黑綠旋風拉線發射器", "https://lin.ee/zBGbaSa"], ["BX-35", "隨機強化組 Vol.4", "https://lin.ee/NmI5pyX"], ["CX-18", "腕龍鞭打", "https://lin.ee/5iP45eb"], ["UX-02", "惡魔戰錘", "https://lin.ee/X1Ypoek"], ["UX-20", "榮耀戰神", "https://lin.ee/OXTR7l3"], ["BX-00", "暴風天馬", "https://lin.ee/S8yfj1o"], ["BX-25", "戰鬥陀螺X專業收納包", "https://lin.ee/ZOZ34q6"], ["BX-57", "3V3對戰收納盒 黑", "https://lin.ee/ZHURiDd"], ["BXG-01", "烈焰飛鳳S", "https://lin.ee/t9Fn7iw"], ["BX-33", "皓戰猛虎", "https://lin.ee/tNvOVbj"], ["BX-26", "獨角刺心", "https://lin.ee/yio9ZGk"], ["BX-18", "發射器", "https://lin.ee/WeVBkyE"]]}, {"region": "新北市", "name": "FunBox 汐止遠雄店", "address": "221新北市汐止區文化里新台五路一段99號2樓", "items": [["BX-50", "天堂日輪 隨機強化組", "https://lin.ee/pM2tdPFu"], ["BX-18", "X旋風發射器", "https://lin.ee/OSj26JJ"], ["BX-26", "獨角刺心", "https://lin.ee/StkURkyV"], ["BX-33", "皓戰猛虎", "https://lin.ee/wjRuEzM"], ["BX-35", "隨機強化組 Vol.4", "https://lin.ee/S2hCveN"], ["BX-45", "武士魂斬", "https://lin.ee/Rka7bKF"], ["UX-02", "惡魔戰錘", "https://lin.ee/qX1qW6ar"], ["BX-10", "極限衝擊戰鬥盤", "https://lin.ee/SUqCHvm"], ["BX-00", "暴風天馬3-70R", "https://lin.ee/Op8jS9I"], ["BX-51", "旋風發射器（黑綠）", "https://lin.ee/9lxk0P4R"], ["BXG-01", "烈燄飛鳳S", "https://lin.ee/RsQCHAX1"], ["BX-40", "發射器（酒紅）", "https://lin.ee/zSArdFn"], ["BXG-04", "銀牙烈虎S", "https://lin.ee/qXJgkTI"], ["BX-57", "3V3對戰收納盒（黑）", "https://lin.ee/wQnsGbN"], ["UX-20", "榮耀武神LF", "https://lin.ee/OW8V3OF"], ["UX-19", "子彈獅鷲H", "https://lin.ee/VCgeEGN"], ["BX-25", "戰鬥陀螺X專業收納包", "https://lin.ee/YY093fd"]]}, {"region": "新北市", "name": "Funbox 中和環球店", "address": "235新北市中和區員山里中山路三段122號", "items": [["BX-18", "X旋風發射器", "https://lin.ee/o1RgS8q"], ["BX-33", "皓戰猛虎", "https://lin.ee/tnp36hW"], ["BX-00", "暴風天馬", "https://lin.ee/nGikFntS"], ["UX-02", "惡魔戰錘", "https://lin.ee/ufiWrfX"], ["UX-11", "衝擊龍神 9-60LR 豪華組", "https://lin.ee/TEak2ba"], ["BX-45", "武士魂斬", "https://lin.ee/tkvs2R4"], ["BX-25", "專業收納包", "https://lin.ee/o2UyqHH"], ["BX-10", "極限衝擊戰鬥盤", "https://lin.ee/96NCPQM"], ["BX-57", "3V3對戰收納盒 黑", "https://lin.ee/UzR2ljE"]]}, {"region": "新北市", "name": "Funbox 宏匯廣場店", "address": "242新北市新莊區中原里新北大道四段3號5樓", "items": []}, {"region": "新北市", "name": "Funbox 新店誠品店", "address": "231新北市新店區寶福里中興路三段70號3樓", "items": [["BX-57", "3V3 對戰收納盒 黑色版（不含陀螺）", "https://lin.ee/NZhMQ4x"], ["BX-25", "專業收納包（不含陀螺）", "https://lin.ee/UMZIIXH"], ["BX-10", "極限衝擊戰鬥盤", "https://lin.ee/r5My0c3"], ["BX-45", "武士魂斬 6-70M", "https://lin.ee/sOWP5E27"], ["BX-51", "蒼旋風發射器／黑綠", "https://lin.ee/PBP4vgc"], ["BXG", "孩之寶聯名款", "https://lin.ee/xAK6Al9"], ["BX-40", "發射器 左迴旋 酒紅", "https://lin.ee/T003MNz"], ["BXG-01", "烈焰飛鳳S", "https://lin.ee/oL6Aqh7"], ["BXG-04", "銀牙烈虎S", "https://lin.ee/nIkFU1w"]]}, {"region": "新北市", "name": "Funbox Toys－板橋大遠百", "address": "220新北市板橋區福丘里新站路28號5樓", "items": []}, {"region": "新北市", "name": "Funbox 板橋遠東店", "address": "220新北市板橋區深丘里中山路一段152號8樓", "items": []}, {"region": "新北市", "name": "Funbox 樹林秀泰店", "address": "238新北市樹林區保安里樹新路40-6號4樓", "items": [["BX-18", "X旋風發射器", "https://lin.ee/SR4uIfA"], ["BX-26", "獨角刺心", "https://lin.ee/VBlLELk"], ["BX-32", "寬型極限衝擊戰鬥盤", "https://lin.ee/UpULXTP"], ["BX-33", "皓戰猛虎", "https://lin.ee/5zFKgpP"], ["BX-40", "發射器（酒紅）", "https://lin.ee/S4uOZ39"], ["BX-50", "天堂日輪 隨機強化組", "https://lin.ee/sTP2QCw"], ["BX-51", "旋風發射器 黑綠", "https://lin.ee/yNH9nGh"], ["UX-02", "惡魔戰錘", "https://lin.ee/yHG2AoXK"], ["UX-19", "子彈獅鷲H", "https://lin.ee/stOnQIN"], ["BX-00", "暴風天馬3-70RA", "https://lin.ee/sFPY1KT"], ["BXG-01", "烈焰飛鳳S", "https://lin.ee/wSSyb6O"], ["BXG-04", "銀牙烈虎S", "https://lin.ee/XeIJeWC"]]}, {"region": "新北市", "name": "Funbox 淡水禮萊廣場店", "address": "251新北市淡水區文化里中正路一段2號", "items": []}, {"region": "新北市", "name": "FUNBOX 比漾廣場店", "address": "234新北市永和區保安里中山路一段238號5F", "items": []}];
+let activeRegion = "全部";
+const root = document.getElementById("stores");
 const search = document.getElementById("search");
 
-function getDoneKey(code) {
-  return "funbox_done_" + code;
+function key(store, code, url) {
+  return "lottery_done|" + store + "|" + code + "|" + url;
 }
 
-function renderProducts(keyword = "") {
-  const text = keyword.trim().toLowerCase();
+function isDone(store, code, url) {
+  return localStorage.getItem(key(store, code, url)) === "1";
+}
 
-  const filtered = products.filter(product =>
-    product.code.toLowerCase().includes(text) ||
-    product.name.toLowerCase().includes(text)
-  );
+function setDone(store, code, url, val) {
+  localStorage.setItem(key(store, code, url), val ? "1" : "0");
+}
 
-  grid.innerHTML = "";
+function render() {
+  const q = search.value.trim().toLowerCase();
+  root.innerHTML = "";
+  let shownStores = 0, shownItems = 0, doneItems = 0;
 
-  filtered.forEach(product => {
-    const card = document.createElement("div");
-    card.className = "card";
+  stores.forEach((s, si) => {
+    const isEmpty = s.items.length === 0;
+    if (activeRegion === "未更新" && !isEmpty) return;
+    if (activeRegion !== "全部" && activeRegion !== "未更新" && s.region !== activeRegion) return;
 
-    const checked =
-      localStorage.getItem(getDoneKey(product.code)) === "true";
+    const storeMatch = (s.name + " " + s.address + " " + s.region).toLowerCase().includes(q);
+    const matchedItems = s.items.filter(it =>
+      storeMatch || (it[0] + " " + it[1]).toLowerCase().includes(q)
+    );
 
+    if (q && !storeMatch && matchedItems.length === 0) return;
+    if (!q && activeRegion === "未更新" && !isEmpty) return;
+
+    shownStores++;
+    shownItems += matchedItems.length;
+
+    const card = document.createElement("section");
+    card.className = "store" + (q ? " open" : "");
     card.innerHTML = `
-      <div class="code">${product.code}</div>
-
-      <div class="name">
-        ${product.name}
+      <div class="store-head">
+        <div>
+          <div class="store-title">${s.name}</div>
+          <div class="addr">${s.address}</div>
+        </div>
+        <div class="badge ${isEmpty ? "empty" : ""}">
+          ${isEmpty ? "尚未更新" : s.items.length + " 個抽選"}
+        </div>
       </div>
-
-      <div class="actions">
-
-        <a
-          class="btn"
-          href="${product.url}"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          前往抽選
-        </a>
-
-        <label class="done-label">
-          <input
-            type="checkbox"
-            ${checked ? "checked" : ""}
-            data-code="${product.code}"
-          >
-          已抽
-        </label>
-
-      </div>
+      <div class="items"></div>
     `;
 
-    grid.appendChild(card);
+    card.querySelector(".store-head").addEventListener("click", () => card.classList.toggle("open"));
+    const itemsBox = card.querySelector(".items");
+
+    if (isEmpty) {
+      itemsBox.innerHTML = '<div class="emptybox">目前尚未更新抽選連結。</div>';
+    } else {
+      matchedItems.forEach((it) => {
+        const [code, name, url] = it;
+        const checked = isDone(s.name, code, url);
+        if (checked) doneItems++;
+        const row = document.createElement("div");
+        row.className = "item" + (checked ? " done-item" : "");
+        row.innerHTML = `
+          <div>
+            <span class="code">${code}</span>
+            <div class="name">${name}</div>
+          </div>
+          <div class="actions">
+            <a class="go" href="${url}" target="_blank" rel="noopener noreferrer">前往抽選</a>
+            <label class="done">
+              <input type="checkbox" ${checked ? "checked" : ""}> 已抽
+            </label>
+          </div>
+        `;
+        row.querySelector('input[type="checkbox"]').addEventListener("change", e => {
+          setDone(s.name, code, url, e.target.checked);
+          row.classList.toggle("done-item", e.target.checked);
+          updateStats();
+        });
+        itemsBox.appendChild(row);
+      });
+    }
+
+    root.appendChild(card);
   });
 
-  document.querySelectorAll(
-    'input[type="checkbox"][data-code]'
-  ).forEach(box => {
-
-    box.addEventListener("change", function() {
-
-      localStorage.setItem(
-        getDoneKey(this.dataset.code),
-        this.checked
-      );
-
-    });
-
-  });
+  document.getElementById("noResults").style.display = shownStores ? "none" : "block";
+  updateStats();
 }
 
-search.addEventListener("input", function() {
-  renderProducts(this.value);
+function updateStats() {
+  const visibleStores = [...document.querySelectorAll(".store")];
+  const visibleItems = [...document.querySelectorAll(".item")];
+  const done = visibleItems.filter(x => x.classList.contains("done-item")).length;
+  document.getElementById("storeStat").textContent = `店家 ${visibleStores.length}`;
+  document.getElementById("itemStat").textContent = `抽選 ${visibleItems.length}`;
+  document.getElementById("doneStat").textContent = `已抽 ${done} / 未抽 ${visibleItems.length - done}`;
+}
+
+document.querySelectorAll(".tab").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
+    btn.classList.add("active");
+    activeRegion = btn.dataset.region;
+    render();
+  });
 });
 
-renderProducts();
+search.addEventListener("input", render);
+render();
 </script>
-
 </body>
 </html>
