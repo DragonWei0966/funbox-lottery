@@ -89,13 +89,21 @@ function setDone(store, code, url, val) {
   localStorage.setItem(key(store, code, url), val ? "1" : "0");
 }
 
-const imageAlias = {
-  "BX-00": "BX-00-bxg47"
-};
+function getImageUrl(code, name = "") {
+  const n = String(name || "");
 
-function getImageUrl(code) {
-  const filename = imageAlias[code] || code;
-  return `images/${filename}.webp`;
+  // BX-00 特殊圖片對照
+  if (code === "BX-00") {
+    if (/蒼龍神劍/i.test(n) && /V2/i.test(n)) {
+      return "images/BX-00-bxg49.webp";
+    }
+
+    if (/暴風天馬/i.test(n)) {
+      return "images/BX-00-bxg47.webp";
+    }
+  }
+
+  return `images/${code}.webp`;
 }
 
 function render() {
@@ -152,7 +160,7 @@ function render() {
         if (checked) doneItems++;
         const row = document.createElement("div");
         row.className = "item" + (checked ? " done-item" : "");
-        const imgUrl = getImageUrl(code);
+        const imgUrl = getImageUrl(code, name);
         row.innerHTML = `
           <div class="thumb-wrap">
             ${imgUrl
